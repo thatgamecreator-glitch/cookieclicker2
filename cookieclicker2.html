@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cookie Clicker MAX</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at top,#35165f 0%,#13091f 45%,#06030b 100%);
+  color:white;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:14px 20px;
+  background:rgba(7,4,13,.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,215,90,.18);
+}
+
+.logo{
+  color:#ffd95a;
+  font-size:22px;
+  font-weight:900;
+}
+
+.top-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.top-btn{
+  border:1px solid rgba(255,255,255,.12);
+  background:#21142f;
+  color:white;
+  padding:9px 13px;
+  border-radius:10px;
+  font-weight:800;
+  transition:.18s;
+}
+
+.top-btn:hover{
+  transform:translateY(-2px);
+  background:#352044;
+}
+
+.top-btn.danger{
+  background:#4b1b2b;
+}
+
+.game{
+  width:min(1150px,94%);
+  margin:auto;
+  padding:30px 0 60px;
+}
+
+.cookie-count{
+  text-align:center;
+  font-size:clamp(30px,6vw,62px);
+  font-weight:900;
+  color:#ffe16a;
+  text-shadow:0 0 25px rgba(255,214,70,.25);
+  word-break:break-word;
+}
+
+.cps,
+.multiplier{
+  text-align:center;
+  color:#cbbbd8;
+  margin-top:6px;
+}
+
+.multiplier{
+  color:#ffd95a;
+  font-weight:900;
+}
+
+.cookie-wrap{
+  position:relative;
+  width:min(430px,84vw);
+  height:min(430px,84vw);
+  margin:30px auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.cookie{
+  position:relative;
+  width:82%;
+  height:82%;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 28%,#dc9b55 0 5%,transparent 6%),
+    radial-gradient(circle at 65% 20%,#713510 0 2.5%,transparent 3%),
+    radial-gradient(circle at 75% 45%,#672e0e 0 3%,transparent 3.5%),
+    radial-gradient(circle at 30% 65%,#743410 0 3%,transparent 3.5%),
+    radial-gradient(circle at 58% 75%,#672d0d 0 2.5%,transparent 3%),
+    radial-gradient(circle at 45% 45%,#6e300e 0 3%,transparent 3.5%),
+    linear-gradient(145deg,#d99a52,#9c5420 55%,#66300f);
+  border:10px solid #4b210d;
+  box-shadow:
+    inset -18px -20px 30px rgba(60,20,0,.4),
+    inset 15px 12px 25px rgba(255,190,90,.3),
+    0 20px 55px rgba(0,0,0,.55),
+    0 0 45px rgba(255,174,40,.15);
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:manipulation;
+  transition:transform .07s;
+}
+
+.cookie:active{
+  transform:scale(.93);
+}
+
+.chip{
+  position:absolute;
+  width:22px;
+  height:14px;
+  border-radius:50%;
+  background:#421805;
+  box-shadow:inset 2px 2px 3px rgba(255,190,100,.15);
+}
+
+.chip:nth-child(1){left:18%;top:27%;transform:rotate(25deg)}
+.chip:nth-child(2){left:48%;top:17%;transform:rotate(-20deg)}
+.chip:nth-child(3){left:70%;top:31%;transform:rotate(15deg)}
+.chip:nth-child(4){left:34%;top:49%;transform:rotate(-12deg)}
+.chip:nth-child(5){left:61%;top:57%;transform:rotate(20deg)}
+.chip:nth-child(6){left:20%;top:68%;transform:rotate(-30deg)}
+.chip:nth-child(7){left:47%;top:78%;transform:rotate(10deg)}
+.chip:nth-child(8){left:76%;top:72%;transform:rotate(-20deg)}
+
+.float{
+  position:absolute;
+  pointer-events:none;
+  font-size:25px;
+  font-weight:900;
+  color:#fff1a6;
+  text-shadow:0 2px 8px #000;
+  animation:floatUp .8s ease-out forwards;
+  z-index:10;
+}
+
+@keyframes floatUp{
+  from{
+    opacity:1;
+    transform:translate(-50%,0) scale(1);
+  }
+  to{
+    opacity:0;
+    transform:translate(-50%,-100px) scale(1.25);
+  }
+}
+
+.section{
+  margin-top:35px;
+}
+
+.section-title{
+  color:#ffd95a;
+  font-size:25px;
+  font-weight:900;
+  margin-bottom:14px;
+}
+
+.shop{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:linear-gradient(145deg,#21122f,#140b1e);
+  border:1px solid rgba(255,215,90,.13);
+  border-radius:16px;
+  padding:17px;
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+}
+
+.card h3{
+  margin:0 0 7px;
+  color:#ffe477;
+}
+
+.card p{
+  color:#bcaec9;
+  margin:5px 0;
+  font-size:14px;
+}
+
+.level{
+  margin:10px 0;
+  color:#cbbddd;
+  font-weight:700;
+}
+
+.buy{
+  width:100%;
+  border:0;
+  padding:11px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#f5c842,#ff9d1a);
+  color:#211000;
+  font-weight:900;
+}
+
+.buy:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+}
+
+.buy:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.prestige{
+  background:linear-gradient(145deg,#241348,#100a1c);
+  border:1px solid rgba(175,115,255,.3);
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+}
+
+.prestige button{
+  margin-top:12px;
+  padding:12px 22px;
+  border:0;
+  border-radius:11px;
+  background:linear-gradient(135deg,#b86cff,#7c3cff);
+  color:white;
+  font-weight:900;
+}
+
+footer{
+  text-align:center;
+  color:#6e607b;
+  padding:30px;
+  font-size:12px;
+}
+
+/* GUI */
+
+.gui-overlay{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+}
+
+.gui-overlay.show{
+  display:flex;
+}
+
+.gui-panel{
+  width:min(800px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:linear-gradient(145deg,#24142f,#100917);
+  border:1px solid rgba(255,215,90,.22);
+  border-radius:20px;
+  box-shadow:0 25px 80px rgba(0,0,0,.6);
+  animation:guiIn .2s ease-out;
+}
+
+@keyframes guiIn{
+  from{
+    opacity:0;
+    transform:scale(.95) translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+}
+
+.gui-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 20px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.gui-title{
+  color:#ffd95a;
+  font-size:24px;
+  font-weight:900;
+}
+
+.gui-subtitle{
+  color:#a99ab3;
+  font-size:13px;
+  margin-top:3px;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:10px;
+  background:#321d40;
+  color:white;
+  font-size:22px;
+  font-weight:900;
+}
+
+.close:hover{
+  background:#49275a;
+}
+
+.gui-grid{
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+
+.stat-card{
+  background:#180e24;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:15px;
+}
+
+.stat-icon{
+  font-size:25px;
+}
+
+.stat-label{
+  color:#9e8eaa;
+  font-size:12px;
+  margin-top:6px;
+}
+
+.stat-value{
+  color:#ffe47a;
+  font-size:20px;
+  font-weight:900;
+  margin-top:4px;
+  word-break:break-word;
+}
+
+.admin-grid{
+  padding:20px;
+  display:grid;
+  gap:15px;
+}
+
+.admin-box{
+  background:#180e24;
+  padding:16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.admin-box h3{
+  margin-top:0;
+  color:#ffd95a;
+}
+
+.input{
+  width:100%;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:#0d0713;
+  color:white;
+  outline:none;
+  margin-bottom:10px;
+}
+
+.input:focus{
+  border-color:#bd7aff;
+}
+
+.gui-button{
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  background:linear-gradient(135deg,#f5c842,#ff9d1a);
+  color:#211000;
+  font-weight:900;
+  margin:3px;
+}
+
+.gui-button.secondary{
+  background:#30203d;
+  color:white;
+}
+
+.gui-button.danger{
+  background:#7d2536;
+  color:white;
+}
+
+.notice{
+  margin:20px;
+  padding:16px;
+  border-radius:12px;
+  background:#21132d;
+  color:#ddd;
+  text-align:center;
+}
+
+.achievement-list{
+  padding:20px;
+  display:grid;
+  gap:10px;
+}
+
+.achievement{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px;
+  border-radius:12px;
+  background:#1b1025;
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.achievement.locked{
+  opacity:.4;
+}
+
+.achievement-icon{
+  font-size:27px;
+}
+
+.achievement-name{
+  font-weight:900;
+}
+
+.achievement-desc{
+  color:#9f91a9;
+  font-size:13px;
+  margin-top:3px;
+}
+
+.progress{
+  padding:20px 20px 0;
+  color:#b9a9c4;
+}
+
+@media(max-width:600px){
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .top-actions{
+    justify-content:flex-start;
+  }
+
+  .cookie-wrap{
+    margin-top:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+  <div class="logo">
+    🍪 Cookie Clicker MAX
+  </div>
+
+  <div class="top-actions">
+
+    <button class="top-btn"
+      onclick="openGui('statsOverlay');updateStats()">
+      📊 Stats
+    </button>
+
+    <button class="top-btn"
+      onclick="openGui('achievementOverlay');updateAchievements()">
+      🏆 Achievements
+    </button>
+
+    <button class="top-btn"
+      onclick="openGui('adminOverlay')">
+      🔐 Admin
+    </button>
+
+    <button class="top-btn danger"
+      onclick="openGui('resetOverlay')">
+      🗑 Reset
+    </button>
+
+  </div>
+</div>
+
+
+<main class="game">
+
+  <div id="cookies" class="cookie-count">
+    0 cookies
+  </div>
+
+  <div id="cps" class="cps">
+    0 cookies per second
+  </div>
+
+  <div id="multiplier" class="multiplier">
+    1x multiplier
+  </div>
+
+
+  <div class="cookie-wrap">
+
+    <div
+      id="cookie"
+      class="cookie"
+      onclick="clickCookie(event)"
+    >
+
+      <div class="chip"></div>
+      <div class="chip"></div>
+      <div class="chip"></div>
+      <div class="chip"></div>
+      <div class="chip"></div>
+      <div class="chip"></div>
+      <div class="chip"></div>
+      <div class="chip"></div>
+
+    </div>
+
+  </div>
+
+
+  <section class="section">
+
+    <div class="section-title">
+      🛒 Cookie Shop
+    </div>
+
+    <div id="shop" class="shop"></div>
+
+  </section>
+
+
+  <section class="section">
+
+    <div class="section-title">
+      🌌 Prestige
+    </div>
+
+    <div class="prestige">
+
+      <h2>
+        Ascend to the Cookie Dimension
+      </h2>
+
+      <p>
+        Reset your cookies and upgrades
+        to gain permanent prestige power.
+      </p>
+
+      <p>
+        Current Prestige:
+        <strong id="prestige">0</strong>
+      </p>
+
+      <button onclick="openPrestige()">
+        ✨ Prestige
+      </button>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+  Cookie Clicker MAX • Autosaves automatically
+</footer>
+
+
+<!-- STATS -->
+
+<div id="statsOverlay" class="gui-overlay">
+
+  <div class="gui-panel">
+
+    <div class="gui-header">
+
+      <div>
+        <div class="gui-title">
+          📊 Statistics
+        </div>
+
+        <div class="gui-subtitle">
+          Your cookie empire at a glance
+        </div>
+      </div>
+
+      <button class="close"
+        onclick="closeGui('statsOverlay')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="gui-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon">🍪</div>
+        <div class="stat-label">Current Cookies</div>
+        <div id="statCookies" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-label">Total Cookies</div>
+        <div id="statTotal" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-label">Cookies / Second</div>
+        <div id="statCps" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👆</div>
+        <div class="stat-label">Click Power</div>
+        <div id="statClick" class="stat-value">1</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🖱️</div>
+        <div class="stat-label">Clicks</div>
+        <div id="statClicks" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🌟</div>
+        <div class="stat-label">Golden Cookies</div>
+        <div id="statGolden" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👑</div>
+        <div class="stat-label">Prestige</div>
+        <div id="statPrestige" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🚀</div>
+        <div class="stat-label">Multiplier</div>
+        <div id="statMultiplier" class="stat-value">1x</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🛠️</div>
+        <div class="stat-label">Upgrade Levels</div>
+        <div id="statUpgrades" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-label">Achievements</div>
+        <div id="statAchievements" class="stat-value">0 / 10</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<div id="adminOverlay" class="gui-overlay">
+
+  <div class="gui-panel">
+
+    <div class="gui-header">
+
+      <div>
+        <div class="gui-title">
+          🔐 Admin Panel
+        </div>
+
+        <div class="gui-subtitle">
+          Cookie Clicker MAX controls
+        </div>
+      </div>
+
+      <button class="close"
+        onclick="closeGui('adminOverlay')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div id="loginArea" class="admin-grid">
+
+      <div class="admin-box">
+
+        <h3>
+          Admin Login
+        </h3>
+
+        <input
+          id="adminPassword"
+          class="input"
+          type="password"
+          placeholder="Enter admin password"
+        >
+
+        <button class="gui-button"
+          onclick="adminLogin()">
+          🔓 Login
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div id="adminControls"
+      class="admin-grid"
+      style="display:none">
+
+      <div class="admin-box">
+
+        <h3>
+          🍪 Cookie Controls
+        </h3>
+
+        <input
+          id="setCookiesInput"
+          class="input"
+          type="number"
+          placeholder="Cookies amount"
+        >
+
+        <button class="gui-button"
+          onclick="adminSetCookies()">
+          Set Cookies
+        </button>
+
+      </div>
+
+
+      <div class="admin-box">
+
+        <h3>
+          ⚡ CPS Controls
+        </h3>
+
+        <input
+          id="setCpsInput"
+          class="input"
+          type="number"
+          placeholder="Cookies per second"
+        >
+
+        <button class="gui-button"
+          onclick="adminSetCps()">
+          Set CPS
+        </button>
+
+      </div>
+
+
+      <div class="admin-box">
+
+        <h3>
+          👆 Click Controls
+        </h3>
+
+        <input
+          id="setClickInput"
+          class="input"
+          type="number"
+          placeholder="Click power"
+        >
+
+        <button class="gui-button"
+          onclick="adminSetClick()">
+          Set Click Power
+        </button>
+
+      </div>
+
+
+      <div class="admin-box">
+
+        <h3>
+          🚀 Max Upgrade Levels
+        </h3>
+
+        <button class="gui-button"
+          onclick="adminUnlockUpgrades()">
+          Unlock 10 Levels Each
+        </button>
+
+      </div>
+
+
+      <div class="admin-box">
+
+        <h3>
+          💾 Save Controls
+        </h3>
+
+        <button class="gui-button secondary"
+          onclick="saveGame();showNotice('Game saved!')">
+          Save Game
+        </button>
+
+        <button class="gui-button secondary"
+          onclick="openSaveGui()">
+          Export / Import
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ACHIEVEMENTS -->
+
+<div id="achievementOverlay" class="gui-overlay">
+
+  <div class="gui-panel">
+
+    <div class="gui-header">
+
+      <div>
+        <div class="gui-title">
+          🏆 Achievements
+        </div>
+
+        <div class="gui-subtitle">
+          Become the ultimate cookie machine
+        </div>
+      </div>
+
+      <button class="close"
+        onclick="closeGui('achievementOverlay')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div id="achievementProgress"
+      class="progress">
+      0 / 10 unlocked
+    </div>
+
+
+    <div id="achievementList"
+      class="achievement-list">
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- PRESTIGE -->
+
+<div id="prestigeOverlay" class="gui-overlay">
+
+  <div class="gui-panel">
+
+    <div class="gui-header">
+
+      <div>
+        <div class="gui-title">
+          🌌 Prestige
+        </div>
+
+        <div class="gui-subtitle">
+          Reset your empire for permanent power
+        </div>
+      </div>
+
+      <button class="close"
+        onclick="closeGui('prestigeOverlay')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="notice">
+
+      You need at least
+      <strong>1,000,000 total cookies</strong>
+      to prestige.
+
+      <br><br>
+
+      Current total:
+      <strong id="prestigeGuiValue">0</strong>
+
+    </div>
+
+
+    <div style="padding:0 20px 20px;text-align:center">
+
+      <button class="gui-button"
+        onclick="doPrestige()">
+        ✨ Prestige Now
+      </button>
+
+      <button class="gui-button secondary"
+        onclick="closeGui('prestigeOverlay')">
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- RESET -->
+
+<div id="resetOverlay" class="gui-overlay">
+
+  <div class="gui-panel">
+
+    <div class="gui-header">
+
+      <div>
+        <div class="gui-title">
+          🗑 Reset Game
+        </div>
+
+        <div class="gui-subtitle">
+          This will erase your saved progress
+        </div>
+      </div>
+
+      <button class="close"
+        onclick="closeGui('resetOverlay')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="notice">
+
+      Are you absolutely sure?
+
+      <br><br>
+
+      All cookies, upgrades, achievements
+      and prestige will be reset.
+
+    </div>
+
+
+    <div style="padding:0 20px 20px;text-align:center">
+
+      <button class="gui-button danger"
+        onclick="resetGame()">
+        Yes, Reset Everything
+      </button>
+
+      <button class="gui-button secondary"
+        onclick="closeGui('resetOverlay')">
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- SAVE MANAGER -->
+
+<div id="saveOverlay" class="gui-overlay">
+
+  <div class="gui-panel">
+
+    <div class="gui-header">
+
+      <div>
+        <div class="gui-title">
+          💾 Save Manager
+        </div>
+
+        <div class="gui-subtitle">
+          Export or import your Cookie Clicker MAX save
+        </div>
+      </div>
+
+      <button class="close"
+        onclick="closeGui('saveOverlay')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="admin-grid">
+
+      <div class="admin-box">
+
+        <h3>
+          Export Save
+        </h3>
+
+        <input
+          id="exportData"
+          class="input"
+          readonly
+          placeholder="Your save code will appear here"
+        >
+
+        <button class="gui-button"
+          onclick="exportSave()">
+          Generate Save Code
+        </button>
+
+        <button class="gui-button secondary"
+          onclick="copySave()">
+          Copy Save
+        </button>
+
+      </div>
+
+
+      <div class="admin-box">
+
+        <h3>
+          Import Save
+        </h3>
+
+        <input
+          id="importData"
+          class="input"
+          placeholder="Paste save code here"
+        >
+
+        <button class="gui-button"
+          onclick="importSave()">
+          Import Save
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- NOTICE -->
+
+<div id="notice" class="gui-overlay">
+
+  <div class="gui-panel"
+    style="max-width:450px">
+
+    <div class="gui-header">
+
+      <div class="gui-title">
+        🍪 Cookie Clicker MAX
+      </div>
+
+      <button class="close"
+        onclick="closeGui('notice')">
+        ×
+      </button>
+
+    </div>
+
+
+    <div id="noticeText"
+      class="notice">
+    </div>
+
+
+    <div style="padding:0 20px 20px;text-align:center">
+
+      <button class="gui-button"
+        onclick="closeGui('notice')">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   GAME CONFIG
+========================================================= */
+
+const ADMIN_PASSWORD = "CookieKing!27";
+
+const upgrades = [
+
+  {name:"Cookie Rookie",power:2,baseCost:100},
+  {name:"Cookie Master",power:5,baseCost:1000},
+  {name:"Cookie Legend",power:10,baseCost:10000},
+  {name:"Cookie Overlord",power:25,baseCost:100000},
+  {name:"Cookie Lord",power:100,baseCost:1000000},
+  {name:"Cookie God",power:1000,baseCost:10000000},
+  {name:"Cookie Destroyer",power:10000,baseCost:100000000},
+  {name:"Cookie Emperor",power:100000,baseCost:1000000000},
+  {name:"Cookie Singularity",power:1000000,baseCost:10000000000},
+  {name:"Cookie Dimension",power:10000000,baseCost:100000000000},
+  {name:"The Cookie One",power:100000000,baseCost:1000000000000},
+  {name:"Infinite Cookie",power:1000000000,baseCost:100000000000000},
+  {name:"Cookie Titan",power:10000000000,baseCost:1000000000000000},
+  {name:"Cookie Universe",power:100000000000,baseCost:10000000000000000},
+  {name:"Cookie Multiverse",power:1000000000000,baseCost:100000000000000000},
+  {name:"Cookie Reality",power:10000000000000,baseCost:1000000000000000000},
+  {name:"Cookie Eternal",power:100000000000000,baseCost:10000000000000000000},
+  {name:"Cookie Omega",power:1000000000000000,baseCost:100000000000000000000},
+  {name:"Cookie Infinity",power:10000000000000000,baseCost:1000000000000000000000},
+  {name:"THE FINAL COOKIE",power:100000000000000000,baseCost:10000000000000000000000}
+
+];
+
+
+const achievements = [
+
+  {
+    name:"First Bite",
+    icon:"🍪",
+    desc:"Click the cookie once.",
+    check:()=>game.clicks>=1
+  },
+
+  {
+    name:"Cookie Fan",
+    icon:"😋",
+    desc:"Reach 100 total cookies.",
+    check:()=>game.total>=100
+  },
+
+  {
+    name:"Cookie Machine",
+    icon:"⚙️",
+    desc:"Reach 1,000 total cookies.",
+    check:()=>game.total>=1000
+  },
+
+  {
+    name:"Cookie Factory",
+    icon:"🏭",
+    desc:"Reach 10,000 total cookies.",
+    check:()=>game.total>=10000
+  },
+
+  {
+    name:"Cookie Millionaire",
+    icon:"💰",
+    desc:"Reach 1,000,000 total cookies.",
+    check:()=>game.total>=1000000
+  },
+
+  {
+    name:"Golden Hunter",
+    icon:"🌟",
+    desc:"Find a golden cookie.",
+    check:()=>game.golden>=1
+  },
+
+  {
+    name:"Cookie Addict",
+    icon:"🔥",
+    desc:"Click 100 times.",
+    check:()=>game.clicks>=100
+  },
+
+  {
+    name:"Cookie Legend",
+    icon:"👑",
+    desc:"Reach 10 prestige.",
+    check:()=>game.prestige>=10
+  },
+
+  {
+    name:"Upgrade Maniac",
+    icon:"🛠️",
+    desc:"Buy 50 upgrade levels.",
+    check:()=>totalUpgradeLevels()>=50
+  },
+
+  {
+    name:"MAXIMUM COOKIE",
+    icon:"🚀",
+    desc:"Reach 1 billion total cookies.",
+    check:()=>game.total>=1000000000
+  }
+
+];
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let game = {
+
+  cookies:0,
+  total:0,
+  cps:0,
+  baseClick:1,
+  clicks:0,
+  golden:0,
+  prestige:0,
+  turbo:1,
+  upgradeLevels:{},
+  unlockedAchievements:[]
+
+};
+
+
+/* =========================================================
+   AUDIO
+   CRUNCH ENGINE
+========================================================= */
+
+let audioCtx = null;
+
+
+/*
+  Creates a short burst of filtered noise.
+  This is the crispy part of the cookie sound.
+*/
+
+function createCrunchNoise(
+  startTime,
+  duration,
+  volume,
+  frequency
+){
+
+  const sampleRate = audioCtx.sampleRate;
+
+  const length =
+    Math.floor(sampleRate * duration);
+
+  const buffer =
+    audioCtx.createBuffer(
+      1,
+      length,
+      sampleRate
+    );
+
+  const data =
+    buffer.getChannelData(0);
+
+  for(let i=0;i<length;i++){
+
+    const envelope =
+      Math.pow(
+        1 - i / length,
+        2.5
+      );
+
+    const random =
+      Math.random() * 2 - 1;
+
+    data[i] =
+      random *
+      envelope *
+      volume;
+
+  }
+
+  const source =
+    audioCtx.createBufferSource();
+
+  const filter =
+    audioCtx.createBiquadFilter();
+
+  const gain =
+    audioCtx.createGain();
+
+  source.buffer = buffer;
+
+  filter.type = "bandpass";
+  filter.frequency.value = frequency;
+  filter.Q.value = 1.2;
+
+  gain.gain.value = 1;
+
+  source
+    .connect(filter)
+    .connect(gain)
+    .connect(audioCtx.destination);
+
+  source.start(startTime);
+
+}
+
+
+/*
+  Generates the full cookie crunch.
+
+  Layer 1 = tiny crack
+  Layer 2 = crispy noise
+  Layer 3 = second crack
+  Layer 4 = low cookie impact
+*/
+
+function playCrunch(){
+
+  try{
+
+    if(!audioCtx){
+
+      audioCtx =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+
+    }
+
+    if(audioCtx.state === "suspended"){
+      audioCtx.resume();
+    }
+
+    const now =
+      audioCtx.currentTime;
+
+
+    /* RANDOMIZATION */
+
+    const pitch =
+      .85 +
+      Math.random() * .3;
+
+
+    /* ---------------------------------
+       CRACK 1
+    --------------------------------- */
+
+    const crack =
+      audioCtx.createOscillator();
+
+    const crackGain =
+      audioCtx.createGain();
+
+    crack.type = "square";
+
+    crack.frequency.setValueAtTime(
+      850 * pitch,
+      now
+    );
+
+    crack.frequency.exponentialRampToValueAtTime(
+      180 * pitch,
+      now + .045
+    );
+
+    crackGain.gain.setValueAtTime(
+      .0001,
+      now
+    );
+
+    crackGain.gain.exponentialRampToValueAtTime(
+      .32,
+      now + .003
+    );
+
+    crackGain.gain.exponentialRampToValueAtTime(
+      .0001,
+      now + .055
+    );
+
+    crack
+      .connect(crackGain)
+      .connect(audioCtx.destination);
+
+    crack.start(now);
+    crack.stop(now + .06);
+
+
+    /* ---------------------------------
+       CRISPY TOP LAYER
+    --------------------------------- */
+
+    createCrunchNoise(
+      now,
+      .075,
+      .8,
+      3300 * pitch
+    );
+
+
+    /* ---------------------------------
+       CRISPY MID LAYER
+    --------------------------------- */
+
+    setTimeout(()=>{
+
+      if(audioCtx){
+
+        createCrunchNoise(
+          audioCtx.currentTime,
+          .095,
+          .55,
+          2100 * pitch
+        );
+
+      }
+
+    },18);
+
+
+    /* ---------------------------------
+       SECOND LITTLE CRACK
+    --------------------------------- */
+
+    const crack2 =
+      audioCtx.createOscillator();
+
+    const crack2Gain =
+      audioCtx.createGain();
+
+    crack2.type = "triangle";
+
+    crack2.frequency.setValueAtTime(
+      420 * pitch,
+      now + .025
+    );
+
+    crack2.frequency.exponentialRampToValueAtTime(
+      100 * pitch,
+      now + .09
+    );
+
+    crack2Gain.gain.setValueAtTime(
+      .0001,
+      now + .025
+    );
+
+    crack2Gain.gain.exponentialRampToValueAtTime(
+      .18,
+      now + .035
+    );
+
+    crack2Gain.gain.exponentialRampToValueAtTime(
+      .0001,
+      now + .11
+    );
+
+    crack2
+      .connect(crack2Gain)
+      .connect(audioCtx.destination);
+
+    crack2.start(now + .025);
+    crack2.stop(now + .115);
+
+
+    /* ---------------------------------
+       LOW COOKIE THUMP
+    --------------------------------- */
+
+    const low =
+      audioCtx.createOscillator();
+
+    const lowGain =
+      audioCtx.createGain();
+
+    low.type = "sine";
+
+    low.frequency.setValueAtTime(
+      115 * pitch,
+      now
+    );
+
+    low.frequency.exponentialRampToValueAtTime(
+      58 * pitch,
+      now + .12
+    );
+
+    lowGain.gain.setValueAtTime(
+      .0001,
+      now
+    );
+
+    lowGain.gain.exponentialRampToValueAtTime(
+      .13,
+      now + .008
+    );
+
+    lowGain.gain.exponentialRampToValueAtTime(
+      .0001,
+      now + .14
+    );
+
+    low
+      .connect(lowGain)
+      .connect(audioCtx.destination);
+
+    low.start(now);
+    low.stop(now + .15);
+
+
+  }catch(error){
+
+    console.log(
+      "Cookie audio unavailable:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   NUMBER FORMAT
+========================================================= */
+
+function formatNumber(num){
+
+  if(!Number.isFinite(num)){
+    return "∞";
+  }
+
+  if(num < 1000){
+    return Math.floor(num).toLocaleString();
+  }
+
+  const units = [
+    "",
+    "K",
+    "M",
+    "B",
+    "T",
+    "Qa",
+    "Qi",
+    "Sx",
+    "Sp",
+    "Oc",
+    "No",
+    "Dc",
+    "Ud",
+    "Dd",
+    "Td"
+  ];
+
+  let index = 0;
+
+  while(
+    num >= 1000 &&
+    index < units.length - 1
+  ){
+
+    num /= 1000;
+    index++;
+
+  }
+
+  if(num >= 100){
+    return num.toFixed(0) + units[index];
+  }
+
+  if(num >= 10){
+    return num.toFixed(1) + units[index];
+  }
+
+  return num.toFixed(2) + units[index];
+
+}
+
+
+/* =========================================================
+   MULTIPLIERS
+========================================================= */
+
+function prestigeMultiplier(){
+
+  return 1 + game.prestige * .25;
+
+}
+
+
+function upgradeMultiplier(){
+
+  let multiplier = 1;
+
+  for(
+    let i=0;
+    i<upgrades.length;
+    i++
+  ){
+
+    const level =
+      game.upgradeLevels[i] || 0;
+
+    multiplier +=
+      upgrades[i].power * level;
+
+  }
+
+  return multiplier;
+
+}
+
+
+function totalMultiplier(){
+
+  return (
+    upgradeMultiplier() *
+    prestigeMultiplier() *
+    game.turbo
+  );
+
+}
+
+
+function currentClickPower(){
+
+  return game.baseClick *
+    totalMultiplier();
+
+}
+
+
+function currentCps(){
+
+  return game.cps *
+    prestigeMultiplier() *
+    game.turbo;
+
+}
+
+
+/* =========================================================
+   CLICK COOKIE
+========================================================= */
+
+function clickCookie(event){
+
+  const amount =
+    currentClickPower();
+
+
+  game.cookies += amount;
+  game.total += amount;
+  game.clicks++;
+
+
+  playCrunch();
+
+
+  const float =
+    document.createElement("div");
+
+  float.className = "float";
+
+  float.textContent =
+    "+" + formatNumber(amount);
+
+
+  const cookie =
+    document.getElementById("cookie");
+
+  const rect =
+    cookie.getBoundingClientRect();
+
+
+  float.style.left =
+    (event.clientX - rect.left) + "px";
+
+  float.style.top =
+    (event.clientY - rect.top) + "px";
+
+
+  document
+    .querySelector(".cookie-wrap")
+    .appendChild(float);
+
+
+  setTimeout(()=>{
+    float.remove();
+  },800);
+
+
+  checkAchievements();
+
+  updateUI();
+
+}
+
+
+/* =========================================================
+   SHOP
+========================================================= */
+
+function upgradeCost(index){
+
+  const level =
+    game.upgradeLevels[index] || 0;
+
+  return upgrades[index].baseCost *
+    Math.pow(1.65,level);
+
+}
+
+
+function buyUpgrade(index){
+
+  const cost =
+    upgradeCost(index);
+
+
+  if(game.cookies < cost){
+
+    showNotice(
+      "You need " +
+      formatNumber(cost-game.cookies) +
+      " more cookies!"
+    );
+
+    return;
+  }
+
+
+  game.cookies -= cost;
+
+
+  game.upgradeLevels[index] =
+    (game.upgradeLevels[index] || 0) + 1;
+
+
+  checkAchievements();
+
+  updateUI();
+
+}
+
+
+function renderShop(){
+
+  const shop =
+    document.getElementById("shop");
+
+  shop.innerHTML = "";
+
+
+  upgrades.forEach(
+    (upgrade,index)=>{
+
+      const level =
+        game.upgradeLevels[index] || 0;
+
+      const cost =
+        upgradeCost(index);
+
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+
+      card.innerHTML = `
+
+        <h3>
+          ${upgrade.name}
+        </h3>
+
+        <p>
+          +${formatNumber(upgrade.power)}
+          click multiplier per level
+        </p>
+
+        <div class="level">
+          Level: ${level}
+        </div>
+
+        <button
+          class="buy"
+          ${game.cookies < cost ? "disabled" : ""}
+          onclick="buyUpgrade(${index})"
+        >
+          Buy • ${formatNumber(cost)}
+        </button>
+
+      `;
+
+
+      shop.appendChild(card);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   GOLDEN COOKIE
+========================================================= */
+
+function spawnGolden(){
+
+  const reward =
+    currentClickPower() * 100;
+
+
+  game.cookies += reward;
+  game.total += reward;
+  game.golden++;
+
+
+  showNotice(
+    "🌟 GOLDEN COOKIE!<br>+" +
+    formatNumber(reward) +
+    " cookies!"
+  );
+
+
+  checkAchievements();
+
+  updateUI();
+
+}
+
+
+setInterval(()=>{
+
+  if(Math.random() < .08){
+    spawnGolden();
+  }
+
+},30000);
+
+
+/* =========================================================
+   PASSIVE COOKIES
+========================================================= */
+
+setInterval(()=>{
+
+  const amount =
+    currentCps();
+
+
+  if(amount > 0){
+
+    game.cookies += amount;
+    game.total += amount;
+
+    checkAchievements();
+
+    updateUI();
+
+  }
+
+},1000);
+
+
+/* =========================================================
+   GUI
+========================================================= */
+
+function openGui(id){
+
+  document
+    .getElementById(id)
+    .classList.add("show");
+
+}
+
+
+function closeGui(id){
+
+  document
+    .getElementById(id)
+    .classList.remove("show");
+
+}
+
+
+function showNotice(text){
+
+  document
+    .getElementById("noticeText")
+    .innerHTML = text;
+
+
+  openGui("notice");
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+  document.getElementById("statCookies")
+    .textContent =
+      formatNumber(game.cookies);
+
+
+  document.getElementById("statTotal")
+    .textContent =
+      formatNumber(game.total);
+
+
+  document.getElementById("statCps")
+    .textContent =
+      formatNumber(currentCps());
+
+
+  document.getElementById("statClick")
+    .textContent =
+      formatNumber(currentClickPower());
+
+
+  document.getElementById("statClicks")
+    .textContent =
+      formatNumber(game.clicks);
+
+
+  document.getElementById("statGolden")
+    .textContent =
+      formatNumber(game.golden);
+
+
+  document.getElementById("statPrestige")
+    .textContent =
+      formatNumber(game.prestige);
+
+
+  document.getElementById("statMultiplier")
+    .textContent =
+      formatNumber(totalMultiplier()) +
+      "x";
+
+
+  document.getElementById("statUpgrades")
+    .textContent =
+      formatNumber(totalUpgradeLevels());
+
+
+  document.getElementById("statAchievements")
+    .textContent =
+      game.unlockedAchievements.length +
+      " / " +
+      achievements.length;
+
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+function totalUpgradeLevels(){
+
+  return Object.values(
+    game.upgradeLevels
+  ).reduce(
+    (sum,value)=>sum + value,
+    0
+  );
+
+}
+
+
+function checkAchievements(){
+
+  achievements.forEach(
+    (achievement,index)=>{
+
+      if(
+        achievement.check() &&
+        !game.unlockedAchievements.includes(index)
+      ){
+
+        game.unlockedAchievements.push(index);
+
+        showNotice(
+          "🏆 Achievement Unlocked!<br>" +
+          achievement.icon +
+          " " +
+          achievement.name
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+function updateAchievements(){
+
+  const list =
+    document.getElementById(
+      "achievementList"
+    );
+
+  list.innerHTML = "";
+
+
+  achievements.forEach(
+    (achievement,index)=>{
+
+      const unlocked =
+        game.unlockedAchievements
+          .includes(index);
+
+
+      const div =
+        document.createElement("div");
+
+
+      div.className =
+        "achievement " +
+        (unlocked ? "" : "locked");
+
+
+      div.innerHTML = `
+
+        <div class="achievement-icon">
+          ${unlocked
+            ? achievement.icon
+            : "🔒"}
+        </div>
+
+        <div>
+
+          <div class="achievement-name">
+            ${achievement.name}
+          </div>
+
+          <div class="achievement-desc">
+            ${achievement.desc}
+          </div>
+
+        </div>
+
+      `;
+
+
+      list.appendChild(div);
+
+    }
+  );
+
+
+  document.getElementById(
+    "achievementProgress"
+  ).textContent =
+    game.unlockedAchievements.length +
+    " / " +
+    achievements.length +
+    " unlocked";
+
+}
+
+
+/* =========================================================
+   PRESTIGE
+========================================================= */
+
+function openPrestige(){
+
+  document.getElementById(
+    "prestigeGuiValue"
+  ).textContent =
+    formatNumber(game.total);
+
+
+  openGui("prestigeOverlay");
+
+}
+
+
+function doPrestige(){
+
+  if(game.total < 1000000){
+
+    showNotice(
+      "You need 1,000,000 total cookies to prestige!"
+    );
+
+    return;
+  }
+
+
+  game.prestige++;
+
+  game.cookies = 0;
+  game.cps = 0;
+  game.upgradeLevels = {};
+
+
+  closeGui("prestigeOverlay");
+
+
+  showNotice(
+    "🌌 PRESTIGE COMPLETE!<br>" +
+    "Prestige is now " +
+    game.prestige +
+    "!"
+  );
+
+
+  updateUI();
+
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+let adminUnlocked = false;
+
+
+function adminLogin(){
+
+  const entered =
+    document.getElementById(
+      "adminPassword"
+    ).value;
+
+
+  if(entered === ADMIN_PASSWORD){
+
+    adminUnlocked = true;
+
+
+    document.getElementById(
+      "loginArea"
+    ).style.display = "none";
+
+
+    document.getElementById(
+      "adminControls"
+    ).style.display = "grid";
+
+
+    showNotice(
+      "🔓 Admin access granted!"
+    );
+
+
+  }else{
+
+    showNotice(
+      "❌ Incorrect admin password."
+    );
+
+  }
+
+}
+
+
+function adminSetCookies(){
+
+  const value =
+    Number(
+      document.getElementById(
+        "setCookiesInput"
+      ).value
+    );
+
+
+  if(!Number.isFinite(value) || value < 0){
+
+    showNotice(
+      "Enter a valid cookie amount."
+    );
+
+    return;
+
+  }
+
+
+  game.cookies = value;
+
+  updateUI();
+
+
+  showNotice(
+    "🍪 Cookies set to " +
+    formatNumber(value)
+  );
+
+}
+
+
+function adminSetCps(){
+
+  const value =
+    Number(
+      document.getElementById(
+        "setCpsInput"
+      ).value
+    );
+
+
+  if(!Number.isFinite(value) || value < 0){
+
+    showNotice(
+      "Enter a valid CPS amount."
+    );
+
+    return;
+
+  }
+
+
+  game.cps = value;
+
+  updateUI();
+
+
+  showNotice(
+    "⚡ CPS set to " +
+    formatNumber(value)
+  );
+
+}
+
+
+function adminSetClick(){
+
+  const value =
+    Number(
+      document.getElementById(
+        "setClickInput"
+      ).value
+    );
+
+
+  if(!Number.isFinite(value) || value < 0){
+
+    showNotice(
+      "Enter a valid click power."
+    );
+
+    return;
+
+  }
+
+
+  game.baseClick = value;
+
+  updateUI();
+
+
+  showNotice(
+    "👆 Base click power set to " +
+    formatNumber(value)
+  );
+
+}
+
+
+function adminUnlockUpgrades(){
+
+  upgrades.forEach(
+    (upgrade,index)=>{
+
+      game.upgradeLevels[index] = 10;
+
+    }
+  );
+
+
+  checkAchievements();
+
+  updateUI();
+
+
+  showNotice(
+    "🚀 Every upgrade is now level 10!"
+  );
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveGame(){
+
+  localStorage.setItem(
+    "cookieClickerMAX",
+    JSON.stringify(game)
+  );
+
+}
+
+
+function loadGame(){
+
+  const saved =
+    localStorage.getItem(
+      "cookieClickerMAX"
+    );
+
+
+  if(!saved){
+    return;
+  }
+
+
+  try{
+
+    const parsed =
+      JSON.parse(saved);
+
+
+    game = {
+      ...game,
+      ...parsed
+    };
+
+
+    if(
+      Array.isArray(parsed.purchased) &&
+      (
+        !parsed.upgradeLevels ||
+        Object.keys(
+          parsed.upgradeLevels
+        ).length === 0
+      )
+    ){
+
+      game.upgradeLevels = {};
+
+
+      parsed.purchased.forEach(
+        index=>{
+          game.upgradeLevels[index] = 1;
+        }
+      );
+
+    }
+
+
+    if(!game.upgradeLevels){
+      game.upgradeLevels = {};
+    }
+
+
+    if(
+      !Array.isArray(
+        game.unlockedAchievements
+      )
+    ){
+
+      game.unlockedAchievements = [];
+
+    }
+
+
+  }catch(error){
+
+    console.log(
+      "Save could not be loaded."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   EXPORT / IMPORT
+========================================================= */
+
+function openSaveGui(){
+
+  openGui("saveOverlay");
+
+}
+
+
+function exportSave(){
+
+  const encoded =
+    btoa(
+      JSON.stringify(game)
+    );
+
+
+  document.getElementById(
+    "exportData"
+  ).value = encoded;
+
+
+  showNotice(
+    "💾 Save code generated!"
+  );
+
+}
+
+
+async function copySave(){
+
+  const input =
+    document.getElementById(
+      "exportData"
+    );
+
+
+  if(!input.value){
+    exportSave();
+  }
+
+
+  try{
+
+    await navigator.clipboard.writeText(
+      input.value
+    );
+
+
+    showNotice(
+      "📋 Save copied!"
+    );
+
+
+  }catch(error){
+
+    input.select();
+
+    showNotice(
+      "Select the save code and copy it manually."
+    );
+
+  }
+
+}
+
+
+function importSave(){
+
+  const data =
+    document.getElementById(
+      "importData"
+    ).value.trim();
+
+
+  if(!data){
+
+    showNotice(
+      "Paste a save code first."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const imported =
+      JSON.parse(
+        atob(data)
+      );
+
+
+    game = {
+      ...game,
+      ...imported
+    };
+
+
+    if(!game.upgradeLevels){
+      game.upgradeLevels = {};
+    }
+
+
+    if(
+      !Array.isArray(
+        game.unlockedAchievements
+      )
+    ){
+
+      game.unlockedAchievements = [];
+
+    }
+
+
+    saveGame();
+
+    updateUI();
+
+
+    showNotice(
+      "✅ Save imported successfully!"
+    );
+
+
+  }catch(error){
+
+    showNotice(
+      "❌ Invalid save code."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame(){
+
+  game = {
+
+    cookies:0,
+    total:0,
+    cps:0,
+    baseClick:1,
+    clicks:0,
+    golden:0,
+    prestige:0,
+    turbo:1,
+    upgradeLevels:{},
+    unlockedAchievements:[]
+
+  };
+
+
+  saveGame();
+
+
+  closeGui(
+    "resetOverlay"
+  );
+
+
+  updateUI();
+
+
+  showNotice(
+    "🗑 Game completely reset."
+  );
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function updateUI(){
+
+  document.getElementById(
+    "cookies"
+  ).textContent =
+    formatNumber(game.cookies) +
+    " cookies";
+
+
+  document.getElementById(
+    "cps"
+  ).textContent =
+    formatNumber(currentCps()) +
+    " cookies per second";
+
+
+  document.getElementById(
+    "multiplier"
+  ).textContent =
+    formatNumber(totalMultiplier()) +
+    "x multiplier";
+
+
+  document.getElementById(
+    "prestige"
+  ).textContent =
+    formatNumber(game.prestige);
+
+
+  renderShop();
+
+  updateStats();
+
+  updateAchievements();
+
+  saveGame();
+
+}
+
+
+/* =========================================================
+   AUTOSAVE
+========================================================= */
+
+setInterval(()=>{
+
+  saveGame();
+
+},5000);
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(event.key === "Escape"){
+
+      document
+        .querySelectorAll(
+          ".gui-overlay.show"
+        )
+        .forEach(gui=>{
+          gui.classList.remove("show");
+        });
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   BASIC INSPECT DETERRENTS
+========================================================= */
+
+document.addEventListener(
+  "contextmenu",
+  event=>{
+    event.preventDefault();
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    const key =
+      event.key.toUpperCase();
+
+
+    if(
+
+      event.key === "F12" ||
+
+      (
+        event.ctrlKey &&
+        event.shiftKey &&
+        ["I","J","C"].includes(key)
+      ) ||
+
+      (
+        event.ctrlKey &&
+        key === "U"
+      )
+
+    ){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+loadGame();
+
+updateUI();
+
+</script>
+
+</body>
+</html>
