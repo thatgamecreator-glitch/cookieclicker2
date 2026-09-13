@@ -1,2 +1,2 @@
-# cookieclicker2
-please someone use this
+cookie clicker 2
+this is really not a read me tho...
