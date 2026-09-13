@@ -1,2 +1,3 @@
 cookie clicker 2
 this is really not a read me tho...
+password for admin panel: read password.txt
